@@ -403,17 +403,18 @@
     setInputLoading(true);
     dom.addBtn.textContent = "Checking...";
 
-    // Must co-occur with ALL previous tags in the chain
-    const allTags = [...chain, tagName];
+    // Must co-occur with the last 3 tags in the chain (or all if fewer than 3)
+    const recentTags = chain.slice(-3);
+    const checkTags = [...recentTags, tagName];
 
     try {
-      const coCount = await AO3.getCoOccurrence(allTags);
+      const coCount = await AO3.getCoOccurrence(checkTags);
 
       if (coCount === 0) {
-        dom.errorMsg.textContent = `"${tagName}" doesn't co-occur with all ${chain.length} tags in your chain.`;
+        dom.errorMsg.textContent = `"${tagName}" doesn't co-occur with your recent tags.`;
         shakeInput();
       } else if (coCount < threshold) {
-        dom.errorMsg.textContent = `"${tagName}" + your chain only has ${formatCount(coCount)} works together (need ${formatCount(threshold)}+).`;
+        dom.errorMsg.textContent = `"${tagName}" + your recent tags only has ${formatCount(coCount)} works together (need ${formatCount(threshold)}+).`;
         shakeInput();
       } else {
         // ✅ Valid! Add to chain
