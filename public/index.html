@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tag Team — how far can you stretch a fandom?</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ══════════ START SCREEN ══════════ -->
+  <div id="start-screen" class="screen active">
+    <div class="container">
+      <h1 class="title">Tag Team</h1>
+      <p class="subtitle">see how deep into ao3's tag system you can go</p>
+
+      <div class="rules-box">
+        <h3>How to Play</h3>
+        <ul>
+          <li>You start with a tag (e.g. <em>"Slow Burn"</em>)</li>
+          <li>Add tags that <strong>co-occur with ALL previous tags</strong> on AO3</li>
+          <li>Each tag can only be used <strong>once</strong></li>
+          <li>The count shown is works tagged with <strong>every tag</strong> in your chain</li>
+          <li>Build the <strong>longest chain</strong> you can!</li>
+        </ul>
+      </div>
+
+      <div class="settings">
+        <div class="setting-group">
+          <label>Difficulty</label>
+          <div class="difficulty-options">
+            <button class="diff-btn" data-threshold="100">Casual<span class="diff-desc">100+ works</span></button>
+            <button class="diff-btn active" data-threshold="500">Normal<span class="diff-desc">500+ works</span></button>
+            <button class="diff-btn" data-threshold="2000">Hard<span class="diff-desc">2,000+ works</span></button>
+            <button class="diff-btn" data-threshold="5000">Unhinged<span class="diff-desc">5,000+ works</span></button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label>Starting Tag</label>
+          <div class="starter-selection">
+            <div class="starter-input-wrap">
+              <input type="text" id="starter-input" placeholder="Type a tag or pick one below..." autocomplete="off">
+              <div id="starter-autocomplete" class="autocomplete-dropdown"></div>
+            </div>
+            <button id="random-starter-btn" class="btn-secondary" title="Random starting tag">🎲 Random</button>
+          </div>
+          <div class="suggested-starters" id="suggested-starters"></div>
+        </div>
+      </div>
+
+      <button id="start-btn" class="btn-primary">Start Chain →</button>
+
+      <div class="personal-best" id="personal-best-display"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ GAME SCREEN ══════════ -->
+  <div id="game-screen" class="screen">
+    <div class="container">
+      <div class="game-header">
+        <div class="game-stats">
+          <div class="stat">
+            <span class="stat-label">Chain</span>
+            <span class="stat-value" id="chain-length">1</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Last Link</span>
+            <span class="stat-value" id="last-link">—</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Best</span>
+            <span class="stat-value" id="current-best">—</span>
+          </div>
+        </div>
+        <button id="give-up-btn" class="btn-danger">End Chain</button>
+      </div>
+
+      <div id="chain-display" class="chain-display"></div>
+
+      <div class="input-area">
+        <div class="tag-input-wrap">
+          <input type="text" id="tag-input" placeholder="Type your next tag..." autocomplete="off" spellcheck="false">
+          <div id="autocomplete-list" class="autocomplete-dropdown"></div>
+        </div>
+        <button id="add-btn" class="btn-primary">Add →</button>
+      </div>
+
+      <div id="error-msg" class="error-msg"></div>
+      <div id="milestone-msg" class="milestone-msg"></div>
+    </div>
+  </div>
+
+  <!-- ══════════ END SCREEN ══════════ -->
+  <div id="end-screen" class="screen">
+    <div class="container">
+      <h2 class="end-title" id="end-title">Chain Complete!</h2>
+      <p class="end-subtitle" id="end-subtitle"></p>
+
+      <div class="final-stats">
+        <div class="final-stat">
+          <span class="final-stat-value" id="final-length">0</span>
+          <span class="final-stat-label">Tags Chained</span>
+        </div>
+        <div class="final-stat">
+          <span class="final-stat-value" id="final-weakest">—</span>
+          <span class="final-stat-label">Weakest Link</span>
+        </div>
+        <div class="final-stat">
+          <span class="final-stat-value" id="final-strongest">—</span>
+          <span class="final-stat-label">Strongest Link</span>
+        </div>
+      </div>
+
+      <div id="final-chain" class="chain-display final"></div>
+
+      <div class="end-actions">
+        <button id="share-btn" class="btn-secondary">📋 Copy Chain</button>
+        <button id="restart-btn" class="btn-primary">Play Again →</button>
+      </div>
+
+      <div id="copy-toast" class="toast">Copied to clipboard!</div>
+    </div>
+  </div>
+
+  <p class="love-note">built for the biggest ao3 lover and advocate i know, i love you :)</p>
+
+  <script src="tagData.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
