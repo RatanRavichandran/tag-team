@@ -2,7 +2,7 @@
 
 **How far can you stretch a fandom?**
 
-Tag Team is a browser-based word-chain game built on top of [Archive of Our Own (AO3)](https://archiveofourown.org/). You start with a freeform tag — like *Slow Burn* or *Enemies to Lovers* — and try to build the longest chain of tags that co-occur on actual AO3 works. Each new tag you add has to appear alongside your most recent tags in real fics. It's basically Six Degrees of Kevin Bacon, but for fanfic tropes.
+Tag Team is a browser-based word-chain game built on top of [Archive of Our Own (AO3)](https://archiveofourown.org/). You start with a freeform tag and try to build the longest chain of tags that co-occur on actual AO3 works. Each new tag you add has to appear alongside your most recent tags in real fics.
 
 ## How It Works
 
@@ -35,7 +35,7 @@ Tag Team is a browser-based word-chain game built on top of [Archive of Our Own 
 node dev-server.js
 ```
 
-Then open [http://localhost:3000](http://localhost:3000). No dependencies to install — it's just vanilla Node.
+Then open [http://localhost:3000](http://localhost:3000). No dependencies to install; it's just vanilla Node.
 
 ## Deploying
 
@@ -63,7 +63,3 @@ ao3/
 - All tag validation happens live against AO3 — there's no static dataset. This means the game reflects whatever's actually on AO3 right now.
 - The API functions include basic caching headers to be polite to AO3's servers.
 - AO3 can rate-limit requests; the game handles 429s gracefully and shows a retry message.
-
-## License
-
-Do whatever you want with it.
