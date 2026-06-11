@@ -19,7 +19,10 @@ export default async function handler(req, res) {
     return;
   }
 
-  const ao3Url = `https://archiveofourown.org/autocomplete/freeform?term=${encodeURIComponent(
+  // Use the ".json" extension so AO3 returns JSON regardless of the Accept
+  // header — the residential proxy sends a browser-style "Accept: text/html",
+  // which otherwise makes AO3 redirect away from the JSON response.
+  const ao3Url = `https://archiveofourown.org/autocomplete/freeform.json?term=${encodeURIComponent(
     term
   )}`;
 
