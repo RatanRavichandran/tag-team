@@ -19,13 +19,22 @@ const BROWSER_HEADERS = {
   "Accept-Language": "en-US,en;q=0.9",
 };
 
-export async function fetchAO3(ao3Url, accept) {
+// AO3's search/Elasticsearch is flaky and Cloudflare intermittently answers
+// datacenter-origin requests with a transient 5xx (525/520/522). Retry those a
+// couple of times — a different residential IP / a moment later usually works.
+// Client errors (404, 429) are returned immediately; retrying them is pointless.
+export async function fetchAO3(ao3Url, accept, { retries = 2 } = {}) {
   const template = process.env.AO3_PROXY_URL;
   const target = template
     ? template.replace("{url}", encodeURIComponent(ao3Url))
     : ao3Url;
 
-  return fetch(target, {
-    headers: { ...BROWSER_HEADERS, Accept: accept },
-  });
+  let res;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    res = await fetch(target, {
+      headers: { ...BROWSER_HEADERS, Accept: accept },
+    });
+    if (res.status < 500) return res;
+  }
+  return res;
 }

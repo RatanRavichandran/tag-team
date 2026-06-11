@@ -7,6 +7,10 @@
 
 import { fetchAO3 } from "./_ao3.js";
 
+// AO3 search can be slow (Elasticsearch + proxy retries). Give it headroom so a
+// slow-but-successful response completes instead of getting killed mid-flight.
+export const config = { maxDuration: 60 };
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");

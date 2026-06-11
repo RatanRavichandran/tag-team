@@ -7,6 +7,9 @@
 
 import { fetchAO3 } from "./_ao3.js";
 
+// Allow headroom for proxy retries when AO3/Cloudflare is briefly flaky.
+export const config = { maxDuration: 60 };
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");

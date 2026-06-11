@@ -45,9 +45,20 @@
       const key = `co:${sorted.join("|||")}`;
       if (cache.has(key)) return cache.get(key);
 
-      const res = await fetch(
-        `/api/cooccurrence?tags=${encodeURIComponent(tags.join(","))}`
-      );
+      // AO3 search can stall for a long time; bail out rather than hang forever.
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+      let res;
+      try {
+        res = await fetch(
+          `/api/cooccurrence?tags=${encodeURIComponent(tags.join(","))}`,
+          { signal: controller.signal }
+        );
+      } catch (e) {
+        throw new Error(e.name === "AbortError" ? "TIMEOUT" : "API_ERROR");
+      } finally {
+        clearTimeout(timeoutId);
+      }
 
       if (res.status === 429) throw new Error("RATE_LIMITED");
       if (!res.ok) throw new Error("API_ERROR");
@@ -402,6 +413,11 @@
     isValidating = true;
     setInputLoading(true);
     dom.addBtn.textContent = "Checking...";
+    // AO3 search is sometimes slow; reassure the player instead of looking frozen.
+    const slowHint = setTimeout(() => {
+      dom.addBtn.textContent = "Still checking…";
+      dom.errorMsg.textContent = "AO3 search can be slow — hang tight.";
+    }, 6000);
 
     // Must co-occur with the last 3 tags in the chain (or all if fewer than 3)
     const recentTags = chain.slice(-3);
@@ -422,6 +438,7 @@
         chainCounts.push(coCount);
         usedTags.add(tagName.toLowerCase());
 
+        dom.errorMsg.textContent = ""; // clear any "still checking" hint
         dom.tagInput.value = "";
         dom.autocompleteList.classList.remove("open");
 
@@ -432,10 +449,16 @@
     } catch (err) {
       if (err.message === "RATE_LIMITED") {
         dom.errorMsg.textContent = "⏳ AO3 rate limit — wait a few seconds and try again.";
+      } else if (err.message === "TIMEOUT") {
+        dom.errorMsg.textContent = "AO3 took too long to respond — try that tag again.";
+      } else if (err.message === "API_ERROR") {
+        dom.errorMsg.textContent = "AO3 is busy right now — try that tag again.";
       } else {
         dom.errorMsg.textContent = "Could not reach AO3. Check your connection.";
       }
+      shakeInput();
     } finally {
+      clearTimeout(slowHint);
       isValidating = false;
       setInputLoading(false);
       dom.addBtn.textContent = "Add →";
