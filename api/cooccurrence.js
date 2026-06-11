@@ -2,9 +2,10 @@
 // Checks how many AO3 works are tagged with ALL given freeform tags.
 // GET /api/cooccurrence?tags=Slow+Burn,Enemies+to+Lovers,Angst
 //
-// Runs on Vercel's Node.js runtime (NOT edge): the edge runtime's TLS stack
-// gets rejected by AO3's Cloudflare with a 525 handshake error, whereas Node's
-// OpenSSL negotiates normally.
+// Runs on Vercel's Node.js runtime. Reaches AO3 via fetchAO3, which routes
+// through a residential proxy in production (see api/_ao3.js).
+
+import { fetchAO3 } from "./_ao3.js";
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -34,15 +35,10 @@ export default async function handler(req, res) {
   )}`;
 
   try {
-    const ao3Res = await fetch(ao3Url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        Accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "en-US,en;q=0.9",
-      },
-    });
+    const ao3Res = await fetchAO3(
+      ao3Url,
+      "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+    );
 
     if (ao3Res.status === 429) {
       res.status(429).json({ error: "rate_limited" });
