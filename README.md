@@ -35,11 +35,11 @@ Tag Team is a browser-based word-chain game built on top of [Archive of Our Own 
 node dev-server.js
 ```
 
-Then open [http://localhost:3000](http://localhost:3000). No dependencies to install; it's just vanilla Node.
+Then open [http://localhost:3000](http://localhost:3000). 
 
 ## Deploying
 
-The project is set up for [Vercel](https://vercel.com/). Just connect the repo and deploy — the `vercel.json` config handles routing API calls to the serverless functions and serving the `public/` directory as static files.
+The project is set up for [Vercel](https://vercel.com/). Connect the repo and deploy — the `vercel.json` config handles routing API calls to the serverless functions and serving the `public/` directory as static files.
 
 ## Project Structure
 
@@ -62,4 +62,4 @@ ao3/
 
 - All tag validation happens live against AO3 — there's no static dataset. This means the game reflects whatever's actually on AO3 right now.
 - The API functions include basic caching headers to be polite to AO3's servers.
-- AO3 can rate-limit requests; the game handles 429s gracefully and shows a retry message.
+- AO3 can rate-limit requests
